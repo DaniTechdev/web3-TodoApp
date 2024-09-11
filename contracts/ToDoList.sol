@@ -69,5 +69,12 @@ contract Todolist {
         return creators;
     }
 
-    functiom
+    function getMessage() external view returns(string[] memory){
+        return message;
+    }
+
+    function toggle(address _creator) public {
+        ToDoListApp storage singleUserData = toDoListApps[_creator];
+        singleUserData.completed = !singleUserData.completed;
+    }
 }
