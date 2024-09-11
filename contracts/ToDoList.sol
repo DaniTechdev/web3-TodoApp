@@ -12,18 +12,20 @@ contract Todolist {
     struct ToDoListApp {
         address account;
         uint256 userId;
-        string messsage;
+        string message;
         bool completed;
+        uint256 timeStamp;
     }
 
     event ToDoEvent(
         address indexed account,
         uint256 indexed userId,
         string message,
-        bool completed
-    )
+        bool completed,
+        uint256 timeStamp
+    );
 
-    mapping (address => TodoListApp) public toDoListApps;
+    mapping(address => ToDoListApp) public toDoListApps;
 
     constructor() {
         ownerOfContract = msg.sender;
@@ -37,39 +39,48 @@ contract Todolist {
         inc();
 
         uint256 idNumber = _idUser;
-        TodoListApp storage toDo = toDoListApps[msg.sender];
+        ToDoListApp storage toDo = toDoListApps[msg.sender];
 
-        todo.account = msg.sender;
+        toDo.account = msg.sender;
         toDo.message = _message;
         toDo.completed = false;
-        toDo.userId = idNumber
+        toDo.userId = idNumber;
+        toDo.timeStamp = block.timestamp;
 
         creators.push(msg.sender);
         message.push(_message);
         messageId.push(idNumber);
-        
-        emit ToDoEvent(msg.sender,toDo.userId,_message,toDo.completed)
+
+        emit ToDoEvent(
+            msg.sender,
+            toDo.userId,
+            _message,
+            toDo.completed,
+            block.timestamp
+        );
     }
 
-    function getCreatorData(address _address ) public view returns(address, uint,string memory, bool){
-        TodoListApp memory singleUserData = toDoListApps[_addresss];
+    function getCreatorData(
+        address _address
+    ) public view returns (address, uint, string memory, bool, uint256) {
+        ToDoListApp memory singleUserData = toDoListApps[_address];
 
         return (
             singleUserData.account,
             singleUserData.userId,
-            singleUserData.messsage,
-            singleUserData.completed
-
-        )
+            singleUserData.message,
+            singleUserData.completed,
+            singleUserData.timeStamp
+        );
     }
 
     //function to get all the arrays we created
 
-    function getAddresses() external view returns (address[] memory){
+    function getAddresses() external view returns (address[] memory) {
         return creators;
     }
 
-    function getMessage() external view returns(string[] memory){
+    function getMessage() external view returns (string[] memory) {
         return message;
     }
 
