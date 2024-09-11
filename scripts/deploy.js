@@ -8,11 +8,13 @@ const hre = require("hardhat");
 
 async function main() {
   const ToDoList = await hre.ethers.getContractFactory("ToDoList");
-  const todoList = await ToDoList.deploy(unlockTime, { value: lockedAmount });
+  const toDoList = await ToDoList.deploy();
 
-  await todoList.deployed();
+  await toDoList.deployed();
 
-  console.log("Lock with 1 ETH deployed to:", todoList.address);
+  console.log("Lock with 1 ETH deployed to:", toDoList.address);
+
+  console.log("toDoList", toDoList);
 }
 
 main().catch((error) => {
