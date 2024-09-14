@@ -124,7 +124,17 @@ export const ToDoListProvider = ({ children }) => {
 
   return (
     <ToDoListContext.Provider
-      value={{ checkIfWalletIsConnected, connectWallet, toDoList }}
+      value={{
+        checkIfWalletIsConnected,
+        connectWallet,
+        getTodoList,
+        toDoList,
+        currentAccount,
+        error,
+        allTodoList,
+        myList,
+        allAddress,
+      }}
     >
       {children}
     </ToDoListContext.Provider>
