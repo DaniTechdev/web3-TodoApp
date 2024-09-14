@@ -25,22 +25,50 @@ export const ToDoListProvider = ({ children }) => {
   const checkIfWalletIsConnected = async () => {
     if (!window.ethereum) return setError("please install MetaMask");
 
-    const account = await window.ethereum.request({ method: "eth_accounts" });
+    const accounts = await window.ethereum.request({ method: "eth_accounts" });
 
-    if (account.length) {
-      setCurrentAccount(account[0]);
-      console.log("first account", account[0]);
+    if (accounts.length) {
+      setCurrentAccount(accounts[0]);
+      console.log("first account", accounts[0]);
     } else {
       setError("Please Install MetaMask & connect, reload");
     }
   };
 
-  //   useEffect(() => {
-  //     checkIfWalletIsConnected();
-  //   }, []);
+  //--CONNECT WALLET
+  //we will change the method
+  const connectWallet = async () => {
+    if (!window.ethereum) return setError("please install MetaMask");
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+
+    setCurrentAccount(accounts[0]);
+  };
+
+  //INTERACTING WITH OUR SMART CONTRACT
+
+  const toDoList = async (message) => {
+    try {
+      //Connecting with smart contract
+
+      const web3modal = new Web3Modal();
+      const connection = await web3modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+
+      const signer = provider.getSigner();
+      const contract = await fetchContract(signer);
+
+      console.log("contract", contract);
+    } catch (error) {
+      setError("Something wrong creating list");
+    }
+  };
 
   return (
-    <ToDoListContext.Provider value={{ checkIfWalletIsConnected }}>
+    <ToDoListContext.Provider
+      value={{ checkIfWalletIsConnected, connectWallet, toDoList }}
+    >
       {children}
     </ToDoListContext.Provider>
   );
