@@ -59,11 +59,17 @@ export const ToDoListProvider = ({ children }) => {
       const signer = provider.getSigner();
       const contract = await fetchContract(signer);
 
-      console.log("contract", contract);
+      //   console.log("contract", contract);
+      const createList = await contract.createList(message);
+      createList.wait();
+
+      console.log("createList", createList);
     } catch (error) {
       setError("Something wrong creating list");
     }
   };
+
+  const getTodoList = async();
 
   return (
     <ToDoListContext.Provider
