@@ -69,7 +69,58 @@ export const ToDoListProvider = ({ children }) => {
     }
   };
 
-  const getTodoList = async();
+  const getTodoList = async () => {
+    try {
+      //Connecting with smart contract
+
+      const web3modal = new Web3Modal();
+      const connection = await web3modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+
+      const signer = provider.getSigner();
+      const contract = await fetchContract(signer);
+
+      //GET DATA
+      const getAllAddress = await contract.getAddresses();
+      setAllAddress(getAllAddress);
+      console.log("getAddress", getAllAddress);
+
+      //get a single user data using the user's addresss
+
+      getAllAddress.map(async (el) => {
+        const getSingleData = await contract.getCreatorData(el);
+        allTodoList.push(getTodoList);
+        //  allTodoList.push(getSingleData);
+        console.log("getSingleData", getSingleData);
+
+        const allMessage = await contract.getMessage();
+        setMyList(allMessage);
+      });
+
+      //CHANGE STATE OF TODOLIST FROM FALSE TO TRUE
+      const change = async (address) => {
+        try {
+          //Connecting with smart contract
+
+          const web3modal = new Web3Modal();
+          const connection = await web3modal.connect();
+          const provider = new ethers.providers.Web3Provider(connection);
+
+          const signer = provider.getSigner();
+          const contract = await fetchContract(signer);
+
+          const state = await contract.toggle(address);
+          state.wait();
+
+          console.log("state", state);
+        } catch (error) {
+          setError("Something wrong while changing toggle state/status");
+        }
+      };
+    } catch (error) {
+      setError("Something wrong Getting Data");
+    }
+  };
 
   return (
     <ToDoListContext.Provider
