@@ -116,7 +116,7 @@ export const ToDoListProvider = ({ children }) => {
       const state = await contract.toggle(address);
       state.wait();
 
-      console.log("state", state);
+      console.log("statetime", state);
     } catch (error) {
       setError("Something wrong while changing toggle state/status");
     }

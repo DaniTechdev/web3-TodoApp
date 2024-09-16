@@ -14,7 +14,8 @@ contract ToDoList {
         uint256 userId;
         string message;
         bool completed;
-        uint256 timeStamp;
+        uint256 creationTimeStamp;
+        uint256 completionTimeStamp;
     }
 
     event ToDoEvent(
@@ -22,7 +23,8 @@ contract ToDoList {
         uint256 indexed userId,
         string message,
         bool completed,
-        uint256 timeStamp
+        uint256 creationTimeStamp,
+        uint256 completionTimeStamp
     );
 
     mapping(address => ToDoListApp) public toDoListApps;
@@ -45,7 +47,8 @@ contract ToDoList {
         toDo.message = _message;
         toDo.completed = false;
         toDo.userId = idNumber;
-        toDo.timeStamp = block.timestamp;
+        toDo.creationTimeStamp = block.timestamp;
+        toDo.completionTimeStamp = block.timestamp;
 
         creators.push(msg.sender);
         message.push(_message);
@@ -56,13 +59,18 @@ contract ToDoList {
             toDo.userId,
             _message,
             toDo.completed,
+            block.timestamp,
             block.timestamp
         );
     }
 
     function getCreatorData(
         address _address
-    ) public view returns (address, uint, string memory, bool, uint256) {
+    )
+        public
+        view
+        returns (address, uint, string memory, bool, uint256, uint256)
+    {
         ToDoListApp memory singleUserData = toDoListApps[_address];
 
         return (
@@ -70,7 +78,8 @@ contract ToDoList {
             singleUserData.userId,
             singleUserData.message,
             singleUserData.completed,
-            singleUserData.timeStamp
+            singleUserData.creationTimeStamp,
+            singleUserData.completionTimeStamp
         );
     }
 
@@ -87,5 +96,9 @@ contract ToDoList {
     function toggle(address _creator) public {
         ToDoListApp storage singleUserData = toDoListApps[_creator];
         singleUserData.completed = !singleUserData.completed;
+
+        if (singleUserData.completed) {
+            singleUserData.completionTimeStamp = block.timestamp;
+        }
     }
 }
