@@ -1,6 +1,6 @@
 import React from "react";
 
-const Data = () => {
+const Data = ({ allTodoList, allAddress, myList }) => {
   return <div>Data</div>;
 };
 

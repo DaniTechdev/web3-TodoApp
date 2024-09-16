@@ -14,6 +14,8 @@ import Data from "../components/Data";
 //HOME COMPONENT
 
 const Home = () => {
+  //STATE
+  const [message, setMessage] = useState("");
   const {
     checkIfWalletIsConnected,
     connectWallet,
@@ -45,6 +47,45 @@ const Home = () => {
       <div className={Style.home_box}>
         <div className={Style.home_completed}>
           <h2>ToDo History List</h2>
+          <div>
+            {myList.map((el, i) => (
+              <div className={Style.home_completed_list}>
+                <MdVerified className={Style.iconColor} />
+                <p>{el.slice(0, 30)}...</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className={Style.home_create}>
+          <div className={Style.home_create_box}>
+            <h2>Create BlockChain TodoList</h2>
+            <div className={Style.home_create_input}>
+              <input
+                type="Text"
+                placeholder="Enter Your todo"
+                onChange={(e) => setMessage(e.target.value)}
+              />
+
+              {currentAccount ? (
+                <RiSendPlaneFill
+                  className={Style.iconBlack}
+                  onClick={() => toDoList(message)}
+                />
+              ) : (
+                <RiSendPlaneFill
+                  className={Style.iconBlack}
+                  onClick={() => connectWallet()}
+                />
+              )}
+            </div>
+
+            <Data
+              allTodoList={allTodoList}
+              allAddress={allAddress}
+              myList={myList}
+            />
+          </div>
         </div>
       </div>
     </div>
