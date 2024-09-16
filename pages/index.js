@@ -26,10 +26,12 @@ const Home = () => {
     allTodoList,
     myList,
     allAddress,
+    change,
   } = useContext(ToDoListContext);
 
   useEffect(() => {
     checkIfWalletIsConnected();
+    getTodoList();
   }, []);
   return (
     <div className={Style.home}>
@@ -84,6 +86,7 @@ const Home = () => {
               allTodoList={allTodoList}
               allAddress={allAddress}
               myList={myList}
+              change={change}
             />
           </div>
         </div>
