@@ -27,6 +27,7 @@ const Home = () => {
     myList,
     allAddress,
     change,
+    CONVERT_TIMESTAMP_TO_READABLE,
   } = useContext(ToDoListContext);
 
   useEffect(() => {
@@ -87,6 +88,7 @@ const Home = () => {
               allAddress={allAddress}
               myList={myList}
               change={change}
+              CONVERT_TIMESTAMP_TO_READABLE={CONVERT_TIMESTAMP_TO_READABLE}
             />
           </div>
         </div>

@@ -121,6 +121,21 @@ export const ToDoListProvider = ({ children }) => {
       setError("Something wrong while changing toggle state/status");
     }
   };
+
+  function CONVERT_TIMESTAMP_TO_READABLE(timestamp) {
+    const date = new Date(timestamp * 1000);
+
+    const readableTime = date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+
+    return readableTime;
+  }
   return (
     <ToDoListContext.Provider
       value={{
@@ -134,6 +149,7 @@ export const ToDoListProvider = ({ children }) => {
         myList,
         allAddress,
         change,
+        CONVERT_TIMESTAMP_TO_READABLE,
       }}
     >
       {children}

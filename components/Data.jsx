@@ -6,25 +6,16 @@ import { RiSendPlaneFill, RiCloseFill } from "react-icons/ri";
 // import { ToDoListContext } from "../context/ToDolistApp";
 import Style from "../styles/index.module.css";
 
-const Data = ({ allTodoList, allAddress, myList, change }) => {
+const Data = ({
+  allTodoList,
+  allAddress,
+  myList,
+  change,
+  CONVERT_TIMESTAMP_TO_READABLE,
+}) => {
   // const { change } = useContext(ToDoListContext);
 
   console.log(allTodoList);
-
-  function CONVERT_TIMESTAMP_TO_READABLE(timestamp) {
-    const date = new Date(timestamp * 1000);
-
-    const readableTime = date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
-
-    return readableTime;
-  }
 
   return (
     <div className={Style.home_create_list}>
@@ -35,13 +26,6 @@ const Data = ({ allTodoList, allAddress, myList, change }) => {
           {allTodoList.map((el, i) => {
             const timeStampCreated = el[4];
             const timeStampCompleted = el[5];
-
-            console.log(
-              "timeStampCreated",
-              timeStampCreated,
-              "timeStampCompleted",
-              timeStampCompleted
-            );
 
             const timeFormaterCreated =
               CONVERT_TIMESTAMP_TO_READABLE(timeStampCreated);
@@ -66,8 +50,8 @@ const Data = ({ allTodoList, allAddress, myList, change }) => {
                     />
                   </div>
                 ) : (
-                  <div>
-                    <p className={Style.down}>Done</p>
+                  <div className={Style.done}>
+                    <p>Done</p>
                     <p>Task creation date: {timeFormaterCreated}</p>
                     <p>Task completion date: {timeFormaterCompleted}</p>
                   </div>
