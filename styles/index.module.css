@@ -1,0 +1,89 @@
+.navBar {
+  width: 70%;
+  margin: 3rem auto;
+  display: flex;
+  justify-content: space-between;
+  background-color: #3c3752;
+  border-radius: 0.5rem;
+  padding: 0.5rem 2rem;
+  align-items: center;
+}
+
+.connect button {
+  background-color: #95759b;
+  border-radius: 0.7rem 1rem;
+  color: rgb(246, 230, 230);
+  font-size: 1rem;
+  padding: 0.5rem 1.5rem;
+  cursor: pointer;
+}
+
+.home {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  margin-bottom: 3rem;
+}
+
+.home_box {
+  width: 70%;
+  margin: 0 auto;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  background-color: #3c3752;
+  box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.35);
+  color: rgb(246, 230, 230);
+
+  display: grid;
+  grid-template-columns: 1.5fr 3fr;
+  gap: 3rem;
+}
+
+.home_completed {
+  padding: 1rem;
+  font-size: 1.2rem;
+}
+
+.home_completed h2 {
+  font-size: 2rem;
+}
+
+.home_completed_list {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.home_create_box {
+  padding: 1rem;
+}
+
+.home_create_box {
+  font-size: 2rem;
+}
+
+.home_create_input {
+  width: 100%;
+  background-color: #95759b;
+
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.home_create_input input {
+  width: 90%;
+  background-color: transparent;
+  border: 0;
+  outline: none;
+  font-size: 1.4rem;
+}
+
+.home_create_input input::placeholder {
+  color: rgb(246, 230, 230);
+}
+
+.iconBlack {
+  color: rgb(246, 230, 230);
+  font-size: 1.5rem;
+  cursor: pointer;
+}

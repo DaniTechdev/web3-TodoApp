@@ -34,6 +34,7 @@ const Home = () => {
     checkIfWalletIsConnected();
     getTodoList();
   }, []);
+
   return (
     <div className={Style.home}>
       <div className={Style.navBar}>
