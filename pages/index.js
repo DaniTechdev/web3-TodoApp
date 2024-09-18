@@ -4,6 +4,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { MdVerified } from "react-icons/md";
 import { RiSendPlaneFill, RiCloseFill } from "react-icons/ri";
 import { AiFillLock, AiFillUnlock } from "react-icons/ai";
+
 import Image from "next/image";
 
 //INTERNAL IMPORT
@@ -28,12 +29,17 @@ const Home = () => {
     allAddress,
     change,
     CONVERT_TIMESTAMP_TO_READABLE,
+    toggle,
+    deleteToggle,
+    editMesssage,
   } = useContext(ToDoListContext);
 
   useEffect(() => {
     checkIfWalletIsConnected();
-    getTodoList();
-  }, []);
+    getTodoList(currentAccount);
+  }, [currentAccount]);
+
+  console.log("My-list", myList);
 
   return (
     <div className={Style.home}>
@@ -52,12 +58,14 @@ const Home = () => {
         <div className={Style.home_completed}>
           <h2>ToDo History List</h2>
           <div>
-            {myList.map((el, i) => (
-              <div className={Style.home_completed_list}>
-                <MdVerified className={Style.iconColor} />
-                <p>{el.slice(0, 30)}...</p>
-              </div>
-            ))}
+            {myList
+              .filter((list) => list.deleted === false)
+              .map((el, i) => (
+                <div className={Style.home_completed_list} key={i + 1}>
+                  <MdVerified className={Style.iconColor} />
+                  <p>{el.message.slice(0, 5)}...</p>
+                </div>
+              ))}
           </div>
         </div>
 
@@ -90,6 +98,10 @@ const Home = () => {
               myList={myList}
               change={change}
               CONVERT_TIMESTAMP_TO_READABLE={CONVERT_TIMESTAMP_TO_READABLE}
+              toggle={toggle}
+              currentAccount={currentAccount}
+              deleteToggle={deleteToggle}
+              editMesssage={editMesssage}
             />
           </div>
         </div>

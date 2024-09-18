@@ -6,6 +6,7 @@ contract ToDoList {
     address public ownerOfContract;
 
     address[] public creators;
+    ToDoListApp[] public ToDoListApps;
     string[] public message;
     uint256[] public messageId;
 
@@ -16,18 +17,11 @@ contract ToDoList {
         bool completed;
         uint256 creationTimeStamp;
         uint256 completionTimeStamp;
+        bool deleted;
+        uint256 deletionTimeStamp;
     }
 
-    event ToDoEvent(
-        address indexed account,
-        uint256 indexed userId,
-        string message,
-        bool completed,
-        uint256 creationTimeStamp,
-        uint256 completionTimeStamp
-    );
-
-    mapping(address => ToDoListApp) public toDoListApps;
+    mapping(address => ToDoListApp[]) public toDoListApps;
 
     constructor() {
         ownerOfContract = msg.sender;
@@ -41,49 +35,30 @@ contract ToDoList {
         inc();
 
         uint256 idNumber = _idUser;
-        ToDoListApp storage toDo = toDoListApps[msg.sender];
 
-        toDo.account = msg.sender;
-        toDo.message = _message;
-        toDo.completed = false;
-        toDo.userId = idNumber;
-        toDo.creationTimeStamp = block.timestamp;
-        toDo.completionTimeStamp = block.timestamp;
+        ToDoListApp memory toDo = ToDoListApp({
+            account: msg.sender,
+            userId: idNumber,
+            message: _message,
+            completed: false,
+            creationTimeStamp: block.timestamp,
+            completionTimeStamp: block.timestamp,
+            deleted: false,
+            deletionTimeStamp: 0
+        });
+
+        toDoListApps[msg.sender].push(toDo);
 
         creators.push(msg.sender);
         message.push(_message);
         messageId.push(idNumber);
-
-        emit ToDoEvent(
-            msg.sender,
-            toDo.userId,
-            _message,
-            toDo.completed,
-            block.timestamp,
-            block.timestamp
-        );
     }
 
     function getCreatorData(
         address _address
-    )
-        public
-        view
-        returns (address, uint, string memory, bool, uint256, uint256)
-    {
-        ToDoListApp memory singleUserData = toDoListApps[_address];
-
-        return (
-            singleUserData.account,
-            singleUserData.userId,
-            singleUserData.message,
-            singleUserData.completed,
-            singleUserData.creationTimeStamp,
-            singleUserData.completionTimeStamp
-        );
+    ) public view returns (ToDoListApp[] memory) {
+        return toDoListApps[_address];
     }
-
-    //function to get all the arrays we created
 
     function getAddresses() external view returns (address[] memory) {
         return creators;
@@ -93,12 +68,36 @@ contract ToDoList {
         return message;
     }
 
-    function toggle(address _creator) public {
-        ToDoListApp storage singleUserData = toDoListApps[_creator];
-        singleUserData.completed = !singleUserData.completed;
+    function toggle(address _creator, uint256 _index) public {
+        ToDoListApp[] storage singleUserData = toDoListApps[_creator];
+        require(_index < singleUserData.length, "Invalid index");
 
-        if (singleUserData.completed) {
-            singleUserData.completionTimeStamp = block.timestamp;
+        singleUserData[_index].completed = true;
+
+        if (singleUserData[_index].completed) {
+            singleUserData[_index].completionTimeStamp = block.timestamp;
         }
+    }
+
+    function toggleDelete(address _creator, uint256 _index) public {
+        ToDoListApp[] storage singleUserData = toDoListApps[_creator];
+        require(_index < singleUserData.length, "Invalid index");
+
+        singleUserData[_index].deleted = true;
+
+        if (singleUserData[_index].deleted) {
+            singleUserData[_index].deletionTimeStamp = block.timestamp;
+        } else {
+            singleUserData[_index].deletionTimeStamp = 0;
+        }
+    }
+
+    function editTask(
+        address _creator,
+        uint _index,
+        string calldata _messsage
+    ) external {
+        ToDoListApp[] storage singleUserData = toDoListApps[_creator];
+        singleUserData[_index].message = _messsage;
     }
 }

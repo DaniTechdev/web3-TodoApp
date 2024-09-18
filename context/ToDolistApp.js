@@ -15,10 +15,10 @@ export const ToDoListContext = React.createContext();
 export const ToDoListProvider = ({ children }) => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [error, setError] = useState("");
-  const [allTodoList, setAllTodoList] = useState([]);
   const [myList, setMyList] = useState([]);
 
   const [allAddress, setAllAddress] = useState([]);
+  const [currentUserMsg, setcurrentUserMsg] = useState([]);
 
   //CONNECTING METAMASK
 
@@ -69,7 +69,7 @@ export const ToDoListProvider = ({ children }) => {
     }
   };
 
-  const getTodoList = async () => {
+  const getTodoList = async (currentAddr) => {
     try {
       //Connecting with smart contract
 
@@ -80,29 +80,28 @@ export const ToDoListProvider = ({ children }) => {
       const signer = provider.getSigner();
       const contract = await fetchContract(signer);
 
-      //GET DATA
-      const getAllAddress = await contract.getAddresses();
-      setAllAddress(getAllAddress);
-      console.log("getAddress", getAllAddress);
+      console.log("contract", contract);
 
-      //get a single user data using the user's addresss
+      const currentUserMsgArray = await contract.getCreatorData(currentAddr);
 
-      getAllAddress.map(async (el) => {
-        const getSingleData = await contract.getCreatorData(el);
-        // allTodoList.push(getTodoList);
-        allTodoList.push(getSingleData);
-        console.log("getSingleData", getSingleData);
+      console.log("currentUserMsgArray", currentUserMsgArray);
 
-        const allMessage = await contract.getMessage();
-        setMyList(allMessage);
-      });
+      // currentUserMsgArray.wait();
+      // console.log("currentUserMsgArray", currentUserMsgArray);
+
+      // currentUserMsgArray.map((el, i) => {
+      //   const singleUserInfo = el[0].message;
+      //   console.log("singleUserInfo", singleUserInfo);
+      //   setMyList(singleUserInfo);
+      // });
+      setMyList(currentUserMsgArray);
     } catch (error) {
       setError("Something wrong Getting Data");
     }
   };
 
   //CHANGE STATE OF TODOLIST FROM FALSE TO TRUE
-  const change = async (address) => {
+  const toggle = async (currentUserAddr, todoId) => {
     try {
       //Connecting with smart contract
 
@@ -113,12 +112,59 @@ export const ToDoListProvider = ({ children }) => {
       const signer = provider.getSigner();
       const contract = await fetchContract(signer);
 
-      const state = await contract.toggle(address);
-      state.wait();
+      const toggleStateTxHash = await contract.toggle(currentUserAddr, todoId);
+      toggleStateTxHash.wait();
 
-      console.log("statetime", state);
+      console.log("statetime", toggleStateTxHash);
     } catch (error) {
       setError("Something wrong while changing toggle state/status");
+    }
+  };
+
+  const deleteToggle = async (currentUserAddr, todoId) => {
+    try {
+      //Connecting with smart contract
+
+      const web3modal = new Web3Modal();
+      const connection = await web3modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+
+      const signer = provider.getSigner();
+      const contract = await fetchContract(signer);
+
+      const deleteToggleStateTxHash = await contract.toggleDelete(
+        currentUserAddr,
+        todoId
+      );
+      deleteToggleStateTxHash.wait();
+
+      console.log("statetime", deleteToggleStateTxHash);
+    } catch (error) {
+      setError("Something wrong while changing toggle state/status");
+    }
+  };
+
+  const editMesssage = async (currentUserAddr, todoId, editmsg) => {
+    try {
+      //Connecting with smart contract
+
+      const web3modal = new Web3Modal();
+      const connection = await web3modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+
+      const signer = provider.getSigner();
+      const contract = await fetchContract(signer);
+
+      const editToggleStateTxHash = await contract.editTask(
+        currentUserAddr,
+        todoId,
+        editmsg
+      );
+      editToggleStateTxHash.wait();
+
+      console.log("statetime", editToggleStateTxHash);
+    } catch (error) {
+      setError("Something wrong while editing the message");
     }
   };
 
@@ -136,6 +182,7 @@ export const ToDoListProvider = ({ children }) => {
 
     return readableTime;
   }
+
   return (
     <ToDoListContext.Provider
       value={{
@@ -145,11 +192,11 @@ export const ToDoListProvider = ({ children }) => {
         toDoList,
         currentAccount,
         error,
-        allTodoList,
         myList,
-        allAddress,
-        change,
         CONVERT_TIMESTAMP_TO_READABLE,
+        toggle,
+        deleteToggle,
+        editMesssage,
       }}
     >
       {children}
