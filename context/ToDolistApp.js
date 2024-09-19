@@ -64,6 +64,7 @@ export const ToDoListProvider = ({ children }) => {
       createList.wait();
 
       console.log("createList", createList);
+      window.location.reload();
     } catch (error) {
       setError("Something wrong creating list");
     }
@@ -116,6 +117,8 @@ export const ToDoListProvider = ({ children }) => {
       toggleStateTxHash.wait();
 
       console.log("statetime", toggleStateTxHash);
+
+      window.location.reload();
     } catch (error) {
       setError("Something wrong while changing toggle state/status");
     }
@@ -139,6 +142,8 @@ export const ToDoListProvider = ({ children }) => {
       deleteToggleStateTxHash.wait();
 
       console.log("statetime", deleteToggleStateTxHash);
+
+      window.location.reload();
     } catch (error) {
       setError("Something wrong while changing toggle state/status");
     }
@@ -163,6 +168,8 @@ export const ToDoListProvider = ({ children }) => {
       editToggleStateTxHash.wait();
 
       console.log("statetime", editToggleStateTxHash);
+
+      window.location.reload();
     } catch (error) {
       setError("Something wrong while editing the message");
     }

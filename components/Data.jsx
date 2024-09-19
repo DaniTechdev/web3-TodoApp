@@ -23,7 +23,10 @@ const Data = ({
 }) => {
   // const { change } = useContext(ToDoListContext);
   const [edit, setEdit] = useState(null);
-  const [editMessage, setEditMessage] = useState("");
+  const [editMessage, setEditMessage] = useState({
+    message: "",
+    editMessage: "",
+  });
 
   console.log("editMessage", editMessage);
 
@@ -32,7 +35,7 @@ const Data = ({
       {myList.length === 0 ? (
         <div className={Style.noData}>No Data</div>
       ) : (
-        <div>
+        <div className={Style.dataBox}>
           {myList
             .filter((list) => list.deleted === false)
             .map((el, index) => {
@@ -67,27 +70,30 @@ const Data = ({
                     <AiFillLock className={Style.lock_color} />
                     {el.message}
                   </div>
-                  {el.completed === false ? (
-                    <div className={Style.done}>
-                      <p> Status:&nbsp; Not yet completed</p>
-                      <p>Task creation date: {timeFormaterCreated}</p>
-                      <FaCheckSquare
-                        onClick={() => toggle(currentAccount, index)}
-                        className={Style.iconClose}
-                      />
+                  <div className={Style.doneBox}>
+                    {el.completed === false ? (
+                      <div className={Style}>
+                        <p> Status:&nbsp; Not yet completed</p>
+                        <p>Task creation date: {timeFormaterCreated}</p>
+                        <FaCheckSquare
+                          onClick={() => toggle(currentAccount, index)}
+                          className={Style.iconClose}
+                        />
 
-                      <p>
-                        Delete:
-                        <RiCloseFill
-                          onClick={() => deleteToggle(currentAccount, index)}
-                        />{" "}
-                      </p>
-                      <button onClick={() => setEdit(index)}>Edit Task</button>
+                        <p>
+                          Delete:
+                          <RiCloseFill
+                            onClick={() => deleteToggle(currentAccount, index)}
+                          />{" "}
+                        </p>
+                        <button onClick={() => setEdit(index)}>
+                          Edit Task
+                        </button>
 
-                      {/* Add edit input and button */}
-                      {edit === index && (
-                        <div>
-                          <input
+                        {/* Add edit input and button */}
+                        {edit === index && (
+                          <div>
+                            {/* <input
                             type="text"
                             value={el.message}
                             placeholder={`${el.message}`}
@@ -95,34 +101,51 @@ const Data = ({
                               setEditMessage(e.target.value);
                             }}
                             className={Style.editInput}
-                          />
-                          <button
-                            className={Style.editButton}
-                            onClick={() =>
-                              editMesssage(currentAccount, index, editMessage)
-                            }
-                          >
-                            Done Editing
-                          </button>
-                          <button
-                            className={Style.editButton}
-                            onClick={() => setEdit(null)}
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className={Style.done}>
-                      <p> Status: &nbsp; Done</p>
-                      <p>Task creation date: {timeFormaterCreated}</p>
-                      <p>Task completion date: {timeFormaterCompleted}</p>
-                      <RiCloseFill
-                        onClick={() => deleteToggle(currentAccount, index)}
-                      />
-                    </div>
-                  )}
+                          /> */}
+                            <input
+                              type="text"
+                              value={editMessage.message}
+                              onChange={(e) =>
+                                setEditMessage({
+                                  message: e.target.value,
+                                  editMessage: e.target.value,
+                                })
+                              }
+                              placeholder={el.message} // Set the placeholder to the original message
+                              className={Style.editInput}
+                            />
+                            <button
+                              className={Style.editButton}
+                              onClick={() =>
+                                editMesssage(
+                                  currentAccount,
+                                  index,
+                                  editMessage.message
+                                )
+                              }
+                            >
+                              Done Editing
+                            </button>
+                            <button
+                              className={Style.editButton}
+                              onClick={() => setEdit(null)}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className={Style.done}>
+                        <p> Status: &nbsp; Done</p>
+                        <p>Task creation date: {timeFormaterCreated}</p>
+                        <p>Task completion date: {timeFormaterCompleted}</p>
+                        <RiCloseFill
+                          onClick={() => deleteToggle(currentAccount, index)}
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
               );
             })}

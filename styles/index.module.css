@@ -1,5 +1,5 @@
 .navBar {
-  width: 70%;
+  width: 90%;
   margin: 3rem auto;
   display: flex;
   justify-content: space-between;
@@ -25,8 +25,14 @@
   margin-bottom: 3rem;
 }
 
+.home_create {
+  margin-bottom: 5rem;
+  border: 2px solid rgb(246, 230, 230);
+  border-radius: 0.7rem;
+}
 .home_box {
-  width: 70%;
+  display: flex;
+  width: 90%;
   margin: 0 auto;
   border-radius: 0.5rem;
   padding: 2rem;
@@ -40,8 +46,10 @@
 }
 
 .home_completed {
+  width: 70%;
   padding: 1rem;
   font-size: 1.2rem;
+  margin-right: 30px;
 }
 
 .home_completed h2 {
@@ -55,19 +63,22 @@
 }
 
 .home_create_box {
-  padding: 1rem;
+  /* padding: 1rem; */
 }
 
 .home_create_box {
-  font-size: 2rem;
+  font-size: 1.5rem;
+  text-align: center;
 }
 
 .home_create_input {
-  width: 100%;
+  width: 90%;
   background-color: #95759b;
 
   padding: 1rem;
   border-radius: 0.5rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 .home_create_input input {
@@ -94,7 +105,10 @@
   gap: 1rem;
   justify-content: space-between;
   margin-top: 1rem;
-  border-bottom: 1px solid #95759b;
+  border: 1px solid white;
+  border-radius: 1rem;
+  height: 16rem;
+  width: 98%;
 }
 
 .lock_list {
@@ -104,6 +118,7 @@
   padding: 2rem;
   margin: 1px auto;
   width: 50%;
+  overflow: hidden;
   /* border: 1px dotted #95759b;
   width: 90%;
   height: 90%; */
@@ -118,12 +133,17 @@
   color: #95759b;
 }
 
-.done {
+/* .doneBox {
+  display: flex;
+  width: 50%;
+} */
+
+.doneBox {
   display: flex;
   flex-direction: column;
   border: 1px dotted #95759b;
   padding: 4rem;
-  font-size: 2rem;
+  font-size: 12px;
   margin: 1rem auto;
   width: 50%;
   border-bottom: 1px solid #95759b;
@@ -139,15 +159,32 @@
   font-size: 1rem auto;
 }
 
-@media screen and (max-width: 35em) {
+.dataBox {
+  width: 90%;
+  margin-left: 1rem;
+  /* border: 2px solid white; */
+  margin-top: 1rem;
+}
+
+@media screen and (max-width: 1144px) {
+  .home_box {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+  }
+  .home_create {
+    width: 40%;
+  }
+}
+
+@media screen and (max-width: 768px) {
   .navBar {
     width: 95%;
     margin: 1rem auto;
   }
 
   .home_box {
+    display: flex;
     width: 95%;
-    grid-template-columns: 1fr;
   }
 
   .home_completed h2 {
@@ -156,5 +193,43 @@
 
   .home_create_box h2 {
     font-size: 1.5rem;
+  }
+
+  .home_completed {
+    display: none;
+  }
+  .home_create {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .navBar {
+    width: 95%;
+    margin: 1rem auto;
+  }
+
+  .home_box {
+    display: flex;
+    width: 95%;
+  }
+
+  .home_completed h2 {
+    font-size: 1.5rem;
+  }
+
+  .home_completed {
+    width: 30%;
+  }
+  .home_create {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 425px) {
+  .home_completed {
+    display: none;
+  }
+
+  .home_create_box {
   }
 }
