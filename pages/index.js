@@ -71,7 +71,7 @@ const Home = () => {
 
         <div className={Style.home_create}>
           <div className={Style.home_create_box}>
-            <h2>Create BlockChain TodoList</h2>
+            <p>Create BlockChain TodoList</p>
             <div className={Style.home_create_input}>
               <input
                 type="Text"

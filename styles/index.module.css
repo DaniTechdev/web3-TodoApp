@@ -230,6 +230,15 @@
     display: none;
   }
 
-  .home_create_box {
+  .home_create {
+    width: 100%;
+  }
+
+  .home_create_box p {
+    font-size: 1.9rem;
+  }
+  .home_create_input input {
+    width: 96%;
+    height: 30px;
   }
 }
