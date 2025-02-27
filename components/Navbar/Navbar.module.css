@@ -1,0 +1,49 @@
+.container {
+  display: flex;
+  font-size: 15px;
+  padding: 20px;
+  align-items: center;
+  justify-content: space-between;
+  background-color: black;
+  color: white;
+  width: 100%;
+  border-radius: 3px;
+}
+
+.container p {
+  font-weight: 500;
+  font-size: 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .admin {
+    display: none;
+  }
+
+  .achive {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 8px;
+    gap: 4px;
+  }
+
+  .container .todo {
+    font-size: small;
+    text-wrap: no-wrap;
+  }
+
+  .container .account {
+    font-size: small;
+    text-wrap: no-wrap;
+  }
+  .container .balance {
+    font-size: small;
+  }
+}

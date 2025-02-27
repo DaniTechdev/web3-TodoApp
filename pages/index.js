@@ -9,103 +9,95 @@ import Image from "next/image";
 
 //INTERNAL IMPORT
 import { ToDoListContext } from "../context/ToDolistApp";
+import Navbar from "../components/Navbar/Navbar";
 import Style from "../styles/index.module.css";
 import Data from "../components/Data";
+import Banner from "../components/Banner/Banner";
+import Card from "../components/Card/Card";
+import Deletebox from "../components/DeleteBox/Deletebox";
 
 //HOME COMPONENT
 
 const Home = () => {
   //STATE
   const [message, setMessage] = useState("");
+  const [myListData, setMyListData] = useState([]);
+
+  const [openAddform, setopenAddform] = useState(false);
+  const [openEdit, setopenEdit] = useState(false);
+  const [openDeleBox, setopenDeleBox] = useState(false);
+
   const {
     checkIfWalletIsConnected,
     connectWallet,
-    getTodoList,
-    toDoList,
     currentAccount,
+    toDoList,
     error,
-    allTodoList,
-    myList,
-    allAddress,
-    change,
+    getActiveTodo,
     CONVERT_TIMESTAMP_TO_READABLE,
-    toggle,
     deleteToggle,
     editMesssage,
+    getDeletedTodos,
+    disconnectWallet,
+    getUserBalance,
+    balance,
+    toggleDone,
   } = useContext(ToDoListContext);
 
+  // useEffect(() => {
+  //   checkIfWalletIsConnected();
+  //   // getActiveTodo();
+  //   getUserBalance();
+  // }, [currentAccount]);
   useEffect(() => {
     checkIfWalletIsConnected();
-    getTodoList(currentAccount);
-  }, [currentAccount]);
+    const activeTodoData = getActiveTodo();
+    getUserBalance();
 
-  console.log("My-list", myList);
+    console.log("Get all getCampaignsData", activeTodoData);
+
+    return async () => {
+      const allActiveData = await activeTodoData;
+      setMyListData(allActiveData);
+    };
+  }, [editMesssage, deleteToggle, toDoList]);
+
+  // useEffect(() => {
+  //   checkIfWalletIsConnected();
+  //   getUserBalance();
+  //   const activeTodoData = getActiveTodo();
+
+  //   console.log("Get all getCampaignsData", activeTodoData);
+
+  //   return async () => {
+  //     const allActiveData = await activeTodoData;
+  //     setMyListData(allActiveData);
+  //   };
+  // }, []);
 
   return (
-    <div className={Style.home}>
-      <div className={Style.navBar}>
-        <Image src={"/Loading.png"} alt="Logo" width={50} height={50} />
-        <div className={Style.connect}>
-          {!currentAccount ? (
-            <button onClick={() => connectWallet()}>Connect Wallet</button>
-          ) : (
-            <button>{currentAccount.slice(0, 20)}...</button>
-          )}
-        </div>
-      </div>
-
-      <div className={Style.home_box}>
-        <div className={Style.home_completed}>
-          <h2>ToDo History List</h2>
-          <div>
-            {myList
-              .filter((list) => list.deleted === false)
-              .map((el, i) => (
-                <div className={Style.home_completed_list} key={i + 1}>
-                  <MdVerified className={Style.iconColor} />
-                  <p>{el.message.slice(0, 5)}...</p>
-                </div>
-              ))}
-          </div>
-        </div>
-
-        <div className={Style.home_create}>
-          <div className={Style.home_create_box}>
-            <p>Create BlockChain TodoList</p>
-            <div className={Style.home_create_input}>
-              <input
-                type="Text"
-                placeholder="Enter Your todo"
-                onChange={(e) => setMessage(e.target.value)}
-              />
-
-              {currentAccount ? (
-                <RiSendPlaneFill
-                  className={Style.iconBlack}
-                  onClick={() => toDoList(message)}
-                />
-              ) : (
-                <RiSendPlaneFill
-                  className={Style.iconBlack}
-                  onClick={() => connectWallet()}
-                />
-              )}
-            </div>
-
-            <Data
-              allTodoList={allTodoList}
-              allAddress={allAddress}
-              myList={myList}
-              change={change}
-              CONVERT_TIMESTAMP_TO_READABLE={CONVERT_TIMESTAMP_TO_READABLE}
-              toggle={toggle}
-              currentAccount={currentAccount}
-              deleteToggle={deleteToggle}
-              editMesssage={editMesssage}
-            />
-          </div>
-        </div>
-      </div>
+    <div>
+      <Navbar
+        currentAccount={currentAccount}
+        balance={balance}
+        connectWallet={connectWallet}
+      />
+      <Banner
+        setopenAddform={setopenAddform}
+        openAddform={openAddform}
+        toDoList={toDoList}
+      />
+      <Card
+        setopenEdit={setopenEdit}
+        openEdit={openEdit}
+        openDeleBox={openDeleBox}
+        setopenDeleBox={setopenDeleBox}
+        myListData={myListData}
+        CONVERT_TIMESTAMP_TO_READABLE={CONVERT_TIMESTAMP_TO_READABLE}
+        deleteToggle={deleteToggle}
+        editMesssage={editMesssage}
+        toggleDone={toggleDone}
+      />
     </div>
   );
 };

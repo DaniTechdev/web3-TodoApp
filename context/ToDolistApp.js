@@ -13,12 +13,9 @@ const fetchContract = (signerOrProvider) =>
 export const ToDoListContext = React.createContext();
 
 export const ToDoListProvider = ({ children }) => {
-  const [currentAccount, setCurrentAccount] = useState("");
+  const [currentAccount, setCurrentAccount] = useState(null);
   const [error, setError] = useState("");
-  const [myList, setMyList] = useState([]);
-
-  const [allAddress, setAllAddress] = useState([]);
-  const [currentUserMsg, setcurrentUserMsg] = useState([]);
+  const [balance, setBalance] = useState("");
 
   //CONNECTING METAMASK
 
@@ -46,6 +43,10 @@ export const ToDoListProvider = ({ children }) => {
     setCurrentAccount(accounts[0]);
   };
 
+  const disconnectWallet = async () => {
+    setCurrentAccount(null);
+  };
+
   //INTERACTING WITH OUR SMART CONTRACT
 
   const toDoList = async (message) => {
@@ -57,7 +58,7 @@ export const ToDoListProvider = ({ children }) => {
       const provider = new ethers.providers.Web3Provider(connection);
 
       const signer = provider.getSigner();
-      const contract = await fetchContract(signer);
+      const contract = fetchContract(signer);
 
       //   console.log("contract", contract);
       const createList = await contract.createList(message);
@@ -70,7 +71,7 @@ export const ToDoListProvider = ({ children }) => {
     }
   };
 
-  const getTodoList = async (currentAddr) => {
+  const getActiveTodo = async () => {
     try {
       //Connecting with smart contract
 
@@ -79,30 +80,23 @@ export const ToDoListProvider = ({ children }) => {
       const provider = new ethers.providers.Web3Provider(connection);
 
       const signer = provider.getSigner();
-      const contract = await fetchContract(signer);
+      const contract = fetchContract(signer);
 
       console.log("contract", contract);
 
-      const currentUserMsgArray = await contract.getCreatorData(currentAddr);
+      const currentUserMsgArray = await contract.getActiveTodos();
 
-      console.log("currentUserMsgArray", currentUserMsgArray);
-
-      // currentUserMsgArray.wait();
-      // console.log("currentUserMsgArray", currentUserMsgArray);
-
-      // currentUserMsgArray.map((el, i) => {
-      //   const singleUserInfo = el[0].message;
-      //   console.log("singleUserInfo", singleUserInfo);
-      //   setMyList(singleUserInfo);
-      // });
-      setMyList(currentUserMsgArray);
+      return currentUserMsgArray;
     } catch (error) {
       setError("Something wrong Getting Data");
     }
   };
 
   //CHANGE STATE OF TODOLIST FROM FALSE TO TRUE
-  const toggle = async (currentUserAddr, todoId) => {
+
+  const deleteToggle = async (todoId) => {
+    console.log("todoId for deleting", todoId * 1);
+
     try {
       //Connecting with smart contract
 
@@ -111,99 +105,178 @@ export const ToDoListProvider = ({ children }) => {
       const provider = new ethers.providers.Web3Provider(connection);
 
       const signer = provider.getSigner();
-      const contract = await fetchContract(signer);
+      const contract = fetchContract(signer);
 
-      const toggleStateTxHash = await contract.toggle(currentUserAddr, todoId);
-      toggleStateTxHash.wait();
-
-      console.log("statetime", toggleStateTxHash);
-
-      window.location.reload();
-    } catch (error) {
-      setError("Something wrong while changing toggle state/status");
-    }
-  };
-
-  const deleteToggle = async (currentUserAddr, todoId) => {
-    try {
-      //Connecting with smart contract
-
-      const web3modal = new Web3Modal();
-      const connection = await web3modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-
-      const signer = provider.getSigner();
-      const contract = await fetchContract(signer);
-
-      const deleteToggleStateTxHash = await contract.toggleDelete(
-        currentUserAddr,
-        todoId
-      );
+      const deleteToggleStateTxHash = await contract.toggleDelete(todoId * 1);
       deleteToggleStateTxHash.wait();
 
-      console.log("statetime", deleteToggleStateTxHash);
+      // console.log("statetime", deleteToggleStateTxHash);
 
+      getActiveTodo();
       window.location.reload();
     } catch (error) {
       setError("Something wrong while changing toggle state/status");
     }
   };
-
-  const editMesssage = async (currentUserAddr, todoId, editmsg) => {
+  const editMesssage = async (todoId, editmsg) => {
     try {
-      //Connecting with smart contract
+      console.log("Editing message...", { todoId, editmsg }); // Log input values
 
+      // Initialize Web3Modal
       const web3modal = new Web3Modal();
+      console.log("Web3Modal initialized");
+
+      // Connect to the wallet
       const connection = await web3modal.connect();
+      console.log("Wallet connected");
+
+      // Initialize the provider
       const provider = new ethers.providers.Web3Provider(connection);
+      console.log("Provider initialized");
 
+      // Get the signer
       const signer = provider.getSigner();
-      const contract = await fetchContract(signer);
+      console.log("Signer fetched");
 
+      // Fetch the contract
+      const contract = fetchContract(signer);
+      console.log("Contract fetched");
+
+      // Call the editTask function on the smart contract
+      console.log("Calling editTask on the contract...");
       const editToggleStateTxHash = await contract.editTask(
-        currentUserAddr,
-        todoId,
+        todoId * 1,
         editmsg
       );
-      editToggleStateTxHash.wait();
+      console.log("Transaction hash:", editToggleStateTxHash);
 
-      console.log("statetime", editToggleStateTxHash);
+      // Wait for the transaction to be confirmed
+      console.log("Waiting for transaction confirmation...");
+      await editToggleStateTxHash.wait();
+      console.log("Transaction confirmed");
 
+      // Reload the page to reflect changes
+      console.log("Reloading page...");
       window.location.reload();
     } catch (error) {
+      console.error("Error editing message:", error);
       setError("Something wrong while editing the message");
     }
   };
 
   function CONVERT_TIMESTAMP_TO_READABLE(timestamp) {
-    const date = new Date(timestamp * 1000);
+    // Check if the timestamp is valid
+    if (!timestamp || isNaN(timestamp)) {
+      return "Invalid Date";
+    }
 
-    const readableTime = date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
+    // Convert the timestamp to a Date object
+    const date = new Date(Number(timestamp) * 1000); // Multiply by 1000 if timestamp is in seconds
 
-    return readableTime;
+    // Define month names
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    // Get date components
+    const month = monthNames[date.getMonth()]; // Get month name
+    const day = date.getDate(); // Get day of the month
+    const year = date.getFullYear(); // Get full year
+    let hours = date.getHours(); // Get hours
+    const minutes = date.getMinutes().toString().padStart(2, "0"); // Get minutes (padded with 0)
+    const ampm = hours >= 12 ? "PM" : "AM"; // Determine AM/PM
+
+    // Convert hours to 12-hour format
+    hours = hours % 12;
+    hours = hours ? hours : 12; // Handle midnight (0 hours)
+
+    // Construct the readable date and time strings
+    const readableDate = `${month} ${day}, ${year}`;
+    const readableTime = `${hours}:${minutes} ${ampm}`;
+
+    return { readableDate, readableTime };
   }
+
+  const getDeletedTodos = async () => {
+    try {
+      //Connecting with smart contract
+
+      const web3modal = new Web3Modal();
+      const connection = await web3modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+
+      const signer = provider.getSigner();
+      const contract = fetchContract(signer);
+
+      console.log("contract", contract);
+
+      const currentUserMsgArray = await contract.getAllDeletedTodos();
+
+      return currentUserMsgArray;
+    } catch (error) {
+      setError("Something wrong Getting Data");
+    }
+  };
+
+  const getUserBalance = async () => {
+    try {
+      const web3modal = new Web3Modal();
+      const connection = await web3modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+
+      const balance = await provider.getBalance(currentAccount); // Get balance in wei
+      const balanceInEther = ethers.utils.formatEther(balance); // Convert wei to Ether
+      setBalance(balanceInEther);
+    } catch (error) {}
+  };
+
+  const toggleDone = async (taskID) => {
+    try {
+      const web3modal = new Web3Modal();
+      const connection = await web3modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+
+      const signer = provider.getSigner();
+      const contract = fetchContract(signer);
+
+      console.log("contract", contract);
+
+      const currentUserMsgArray = await contract.toggleDone(taskID);
+
+      currentUserMsgArray.wait();
+
+      window.location.reload();
+    } catch (error) {}
+  };
 
   return (
     <ToDoListContext.Provider
       value={{
         checkIfWalletIsConnected,
         connectWallet,
-        getTodoList,
-        toDoList,
         currentAccount,
+        toDoList,
         error,
-        myList,
+        getActiveTodo,
         CONVERT_TIMESTAMP_TO_READABLE,
-        toggle,
         deleteToggle,
         editMesssage,
+        getDeletedTodos,
+        disconnectWallet,
+        getUserBalance,
+        balance,
+        toggleDone,
       }}
     >
       {children}

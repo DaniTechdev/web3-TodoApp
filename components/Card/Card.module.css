@@ -1,0 +1,116 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.containerCard {
+  display: flex;
+  width: 90%;
+  background-color: rgb(131, 118, 118);
+  border: 1px solid gray;
+  border-radius: 3px;
+  padding: 6px;
+}
+.cardLeft {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  text-align: left;
+  width: 40%;
+  background-color: rgb(160, 148, 134);
+}
+
+.cardLeft input {
+  margin-right: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.cardLeft p {
+  overflow: auto;
+  padding: 4px;
+}
+
+.todoCompleted {
+  text-decoration: line-through;
+}
+
+.notCompleted {
+  text-decoration: none;
+}
+.cardRight {
+  display: flex;
+  width: 60%;
+  align-items: center;
+  justify-content: space-around;
+  /* background-color: bisque; */
+}
+
+.cardLeft p {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 3px;
+  color: black;
+  border-radius: 1px solid black;
+  width: 100%;
+  height: 100%;
+}
+
+.status {
+  display: flex;
+  flex-direction: column;
+  width: 100px;
+  border: 1px solid rgb(200, 180, 184);
+
+  padding: 3px;
+  border-radius: 3px;
+}
+
+.creationDate {
+  display: flex;
+  flex-direction: column;
+  width: 100px;
+  border: 1px solid rgb(200, 180, 184);
+
+  padding: 3px;
+  border-radius: 3px;
+}
+
+.creationTime {
+  display: flex;
+  flex-direction: column;
+  width: 100px;
+  border: 1px solid rgb(200, 180, 184);
+  padding: 3px;
+  border-radius: 3px;
+}
+
+.cardRight button {
+  background-color: rgb(53, 53, 155);
+  color: white;
+  font-size: 10px;
+  border: none;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 4px;
+}
+
+.containerCard .cardRight p {
+  padding-bottom: 1px solid rgb(200, 180, 184);
+  border: 1px;
+}
+
+@media screen and (max-width: 426px) {
+  .creationDate {
+    display: none;
+  }
+
+  .creationTime {
+    display: none;
+  }
+}

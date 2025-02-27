@@ -14,7 +14,7 @@ async function main() {
 
   console.log("Lock with 1 ETH deployed to:", toDoList.address);
 
-  console.log("toDoList", toDoList);
+  // console.log("toDoList", toDoList);
 }
 
 main().catch((error) => {
